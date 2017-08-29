@@ -5,7 +5,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -22,6 +27,11 @@ public class Maggy extends AppCompatActivity {
     final String TAG = "Maggy";
     ArrayList<Food> foodList;
     GridView gridview;
+    TextView score;
+    int scorePoints = 0;
+    float animDur = 1;
+    LinearLayout tableScore;
+    int viewID = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +39,36 @@ public class Maggy extends AppCompatActivity {
         setContentView(R.layout.activity_maggy);
         foodList = new ArrayList<>();
         gridview = (GridView) findViewById(R.id.gridview);
-        gridview.setColumnWidth(100);
+        //gridview.setColumnWidth(200);
         new GetFood().execute();
+        score = (TextView) findViewById(R.id.score);
+        tableScore = (LinearLayout) findViewById(R.id.scoreTable);
+
+        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                //Toast.makeText(Maggy.this, "Position: " + position + ", id: " + id, Toast.LENGTH_LONG).show();
+                int points = foodList.get((int)id).getScore();
+                scorePoints += points;
+                score.setText(String.valueOf(scorePoints));
+
+                getNewView(id);
+            }
+        });
+    }
+
+    private View getNewView(long id) {
+        View newFood = View.inflate(Maggy.this, R.layout.list_item, tableScore);
+        //newFood.setId(viewID+1);
+        // Find the TextView in the list_item.xml layout with the ID version_name
+        TextView nameTextView = (TextView) newFood.findViewById(R.id.version_name);
+        nameTextView.setText(foodList.get((int)id).getName());
+        nameTextView.setId(viewID+1);
+
+        // Find the ImageView in the list_item.xml layout with the ID list_item_icon
+        ImageView iconView = (ImageView) newFood.findViewById(R.id.list_item_icon);
+        iconView.setImageResource(R.drawable.i1);
+        iconView.setId(viewID+1);
+        return newFood;
     }
 
     private class GetFood extends AsyncTask<Void, Void, Void> {
