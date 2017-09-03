@@ -28,9 +28,14 @@ public class Maggy extends AppCompatActivity {
     ArrayList<Food> foodList;
     GridView gridview;
     TextView score;
+    TextView nScore;
+    TextView pScore;
     int scorePoints = 0;
+    int nScorePoints = 0;
+    int pScorePoints = 0;
     float animDur = 1;
-    LinearLayout tableScore;
+    LinearLayout tableN;
+    LinearLayout tableP;
     int viewID = 100;
 
     @Override
@@ -41,8 +46,11 @@ public class Maggy extends AppCompatActivity {
         gridview = (GridView) findViewById(R.id.gridview);
         //gridview.setColumnWidth(200);
         new GetFood().execute();
-        score = (TextView) findViewById(R.id.score);
-        tableScore = (LinearLayout) findViewById(R.id.scoreTable);
+        score = (TextView) findViewById(R.id.fScoreText);
+        nScore = (TextView) findViewById(R.id.nScoreText);
+        pScore = (TextView) findViewById(R.id.pScoreText);
+        tableN = (LinearLayout) findViewById(R.id.tableN);
+        tableP = (LinearLayout) findViewById(R.id.tableP);
 
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
@@ -51,24 +59,29 @@ public class Maggy extends AppCompatActivity {
                 scorePoints += points;
                 score.setText(String.valueOf(scorePoints));
 
-                getNewView(id);
+                View newFood;
+                if (points > 0) {
+                    newFood = View.inflate(Maggy.this, R.layout.list_item, tableP);
+                    pScorePoints += points;
+                    pScore.setText(String.valueOf(pScorePoints));
+                } else {
+                    newFood = View.inflate(Maggy.this, R.layout.list_item, tableN);
+                    nScorePoints += points;
+                    nScore.setText(String.valueOf(nScorePoints));
+                }
+                //newFood.setId(viewID+1);
+                /* Find the TextView in the list_item.xml layout with the ID version_name
+                TextView nameTextView = (TextView) newFood.findViewById(R.id.version_name);
+                nameTextView.setText(foodList.get((int)id).getName());
+                nameTextView.setId(viewID+1);
+                */
+
+                // Find the ImageView in the list_item.xml layout with the ID list_item_icon
+                ImageView iconView = (ImageView) newFood.findViewById(R.id.list_item_icon);
+                iconView.setImageResource(R.drawable.i1);
+                iconView.setId(viewID+1);
             }
         });
-    }
-
-    private View getNewView(long id) {
-        View newFood = View.inflate(Maggy.this, R.layout.list_item, tableScore);
-        //newFood.setId(viewID+1);
-        // Find the TextView in the list_item.xml layout with the ID version_name
-        TextView nameTextView = (TextView) newFood.findViewById(R.id.version_name);
-        nameTextView.setText(foodList.get((int)id).getName());
-        nameTextView.setId(viewID+1);
-
-        // Find the ImageView in the list_item.xml layout with the ID list_item_icon
-        ImageView iconView = (ImageView) newFood.findViewById(R.id.list_item_icon);
-        iconView.setImageResource(R.drawable.i1);
-        iconView.setId(viewID+1);
-        return newFood;
     }
 
     private class GetFood extends AsyncTask<Void, Void, Void> {

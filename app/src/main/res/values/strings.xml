@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Food score</string>
+    <string name="VS">VS</string>
+
 </resources>
