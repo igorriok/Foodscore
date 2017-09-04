@@ -62,10 +62,12 @@ public class Maggy extends AppCompatActivity {
                 View newFood;
                 if (points > 0) {
                     newFood = View.inflate(Maggy.this, R.layout.list_item, tableP);
+                    newFood.setPadding(4,4,4,4);
                     pScorePoints += points;
                     pScore.setText(String.valueOf(pScorePoints));
                 } else {
                     newFood = View.inflate(Maggy.this, R.layout.list_item, tableN);
+                    newFood.setPadding(4,4,4,4);
                     nScorePoints += points;
                     nScore.setText(String.valueOf(nScorePoints));
                 }
