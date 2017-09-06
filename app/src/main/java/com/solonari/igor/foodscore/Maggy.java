@@ -1,15 +1,21 @@
 package com.solonari.igor.foodscore;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.ProgressDialog;
+import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,30 +66,92 @@ public class Maggy extends AppCompatActivity {
                 score.setText(String.valueOf(scorePoints));
 
                 View newFood;
-                if (points > 0) {
-                    newFood = View.inflate(Maggy.this, R.layout.list_item, tableP);
-                    newFood.setPadding(4,4,4,4);
-                    pScorePoints += points;
-                    pScore.setText(String.valueOf(pScorePoints));
-                } else {
-                    newFood = View.inflate(Maggy.this, R.layout.list_item, tableN);
-                    newFood.setPadding(4,4,4,4);
-                    nScorePoints += points;
-                    nScore.setText(String.valueOf(nScorePoints));
-                }
+                newFood = View.inflate(Maggy.this, R.layout.list_item, null);
+                newFood.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+                newFood.setPadding(4,4,4,4);
+
                 //newFood.setId(viewID+1);
-                /* Find the TextView in the list_item.xml layout with the ID version_name
+                //Find the TextView in the list_item.xml layout with the ID version_name
                 TextView nameTextView = (TextView) newFood.findViewById(R.id.version_name);
                 nameTextView.setText(foodList.get((int)id).getName());
                 nameTextView.setId(viewID+1);
-                */
 
                 // Find the ImageView in the list_item.xml layout with the ID list_item_icon
                 ImageView iconView = (ImageView) newFood.findViewById(R.id.list_item_icon);
                 iconView.setImageResource(R.drawable.i1);
                 iconView.setId(viewID+1);
+
+                if (points > 0) {
+                    tableP.addView(newFood, 0);
+                    pScorePoints += points;
+                    pScore.setText(String.valueOf(pScorePoints));
+                } else {
+                    tableN.addView(newFood, 0);
+                    nScorePoints += points;
+                    nScore.setText(String.valueOf(nScorePoints));
+                }
             }
         });
+    }
+
+    public static AnimatorSet getViewToViewScalingAnimator(final RelativeLayout parentView,
+                                                           final View viewToAnimate,
+                                                           final Rect fromViewRect,
+                                                           final Rect toViewRect,
+                                                           final long duration,
+                                                           final long startDelay) {
+        // get all coordinates at once
+        final Rect parentViewRect = new Rect(), viewToAnimateRect = new Rect();
+        parentView.getGlobalVisibleRect(parentViewRect);
+        viewToAnimate.getGlobalVisibleRect(viewToAnimateRect);
+
+        viewToAnimate.setScaleX(1f);
+        viewToAnimate.setScaleY(1f);
+
+        // rescaling of the object on X-axis
+        final ValueAnimator valueAnimatorWidth = ValueAnimator.ofInt(fromViewRect.width(), toViewRect.width());
+        valueAnimatorWidth.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                // Get animated width value update
+                int newWidth = (int) valueAnimatorWidth.getAnimatedValue();
+
+                // Get and update LayoutParams of the animated view
+                RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) viewToAnimate.getLayoutParams();
+
+                lp.width = newWidth;
+                viewToAnimate.setLayoutParams(lp);
+            }
+        });
+
+        // rescaling of the object on Y-axis
+        final ValueAnimator valueAnimatorHeight = ValueAnimator.ofInt(fromViewRect.height(), toViewRect.height());
+        valueAnimatorHeight.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                // Get animated width value update
+                int newHeight = (int) valueAnimatorHeight.getAnimatedValue();
+
+                // Get and update LayoutParams of the animated view
+                RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) viewToAnimate.getLayoutParams();
+                lp.height = newHeight;
+                viewToAnimate.setLayoutParams(lp);
+            }
+        });
+
+        // moving of the object on X-axis
+        ObjectAnimator translateAnimatorX = ObjectAnimator.ofFloat(viewToAnimate, "X", fromViewRect.left - parentViewRect.left, toViewRect.left - parentViewRect.left);
+
+        // moving of the object on Y-axis
+        ObjectAnimator translateAnimatorY = ObjectAnimator.ofFloat(viewToAnimate, "Y", fromViewRect.top - parentViewRect.top, toViewRect.top - parentViewRect.top);
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.setInterpolator(new DecelerateInterpolator(1f));
+        animatorSet.setDuration(duration); // can be decoupled for each animator separately
+        animatorSet.setStartDelay(startDelay); // can be decoupled for each animator separately
+        animatorSet.playTogether(valueAnimatorWidth, valueAnimatorHeight, translateAnimatorX, translateAnimatorY);
+
+        return animatorSet;
     }
 
     private class GetFood extends AsyncTask<Void, Void, Void> {
