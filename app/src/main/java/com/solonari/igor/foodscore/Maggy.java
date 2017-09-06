@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -43,6 +44,7 @@ public class Maggy extends AppCompatActivity {
     LinearLayout tableN;
     LinearLayout tableP;
     int viewID = 100;
+    ConstraintLayout root;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +59,7 @@ public class Maggy extends AppCompatActivity {
         pScore = (TextView) findViewById(R.id.pScoreText);
         tableN = (LinearLayout) findViewById(R.id.tableN);
         tableP = (LinearLayout) findViewById(R.id.tableP);
+        root = (ConstraintLayout) findViewById(R.id.root);
 
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
@@ -67,19 +70,44 @@ public class Maggy extends AppCompatActivity {
 
                 View newFood;
                 newFood = View.inflate(Maggy.this, R.layout.list_item, null);
-                newFood.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
-                newFood.setPadding(4,4,4,4);
+                //newFood.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+                //newFood.setPadding(4,4,4,4);
 
                 //newFood.setId(viewID+1);
                 //Find the TextView in the list_item.xml layout with the ID version_name
                 TextView nameTextView = (TextView) newFood.findViewById(R.id.version_name);
                 nameTextView.setText(foodList.get((int)id).getName());
-                nameTextView.setId(viewID+1);
+                nameTextView.setId(viewID++);
 
                 // Find the ImageView in the list_item.xml layout with the ID list_item_icon
                 ImageView iconView = (ImageView) newFood.findViewById(R.id.list_item_icon);
                 iconView.setImageResource(R.drawable.i1);
-                iconView.setId(viewID+1);
+                iconView.setId(viewID++);
+                
+                //newFood.setLayoutParams(v.getLayoutParams());
+                Rect rectf = new Rect();
+                v.getGlobalVisibleRect(rectf);
+                Rect parentRect = new Rect();
+                root.getGlobalVisibleRect(parentRect);
+
+                newFood.setLayoutParams(new LinearLayout.LayoutParams(v.getWidth(), v.getHeight()));
+                newFood.setX(rectf.left);
+                newFood.setY(rectf.top - parentRect.top);
+                Log.d(TAG, "position: "+ rectf.left + " " + rectf.top);
+                root.addView(newFood);
+                newFood.setElevation(8);
+
+
+
+                root.removeView(newFood);
+
+                newFood.setX(0);
+                newFood.setY(0);
+
+                newFood.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+                newFood.setPadding(4,4,4,4);
+                newFood.setElevation(8);
+
 
                 if (points > 0) {
                     tableP.addView(newFood, 0);
