@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Food score</string>
     <string name="VS">VS</string>
+    <string name="reset">Reset</string>
+    <string name="food_points">200</string>
 
 </resources>

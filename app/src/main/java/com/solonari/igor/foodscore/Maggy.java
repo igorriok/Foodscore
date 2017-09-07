@@ -1,22 +1,25 @@
 package com.solonari.igor.foodscore;
 
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.app.ProgressDialog;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.transition.ChangeTransform;
+import android.transition.Transition;
+import android.transition.TransitionManager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,11 +48,15 @@ public class Maggy extends AppCompatActivity {
     LinearLayout tableP;
     int viewID = 100;
     ConstraintLayout root;
+    View newFood;
+    int FOOD_POINTS = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maggy);
+
+        setSupportActionBar((Toolbar) findViewById(R.id.my_toolbar));
         foodList = new ArrayList<>();
         gridview = (GridView) findViewById(R.id.gridview);
         //gridview.setColumnWidth(200);
@@ -66,23 +73,25 @@ public class Maggy extends AppCompatActivity {
                 //Toast.makeText(Maggy.this, "Position: " + position + ", id: " + id, Toast.LENGTH_LONG).show();
                 int points = foodList.get((int)id).getScore();
                 scorePoints += points;
-                score.setText(String.valueOf(scorePoints));
-
-                View newFood;
+                setScore(scorePoints);
+                //newFood = new ImageView(Maggy.this);
                 newFood = View.inflate(Maggy.this, R.layout.list_item, null);
-                //newFood.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
-                //newFood.setPadding(4,4,4,4);
+                newFood.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+                newFood.setPadding(4,4,4,4);
 
                 //newFood.setId(viewID+1);
                 //Find the TextView in the list_item.xml layout with the ID version_name
-                TextView nameTextView = (TextView) newFood.findViewById(R.id.version_name);
-                nameTextView.setText(foodList.get((int)id).getName());
-                nameTextView.setId(viewID++);
+                //TextView nameTextView = (TextView) newFood.findViewById(R.id.version_name);
+                //nameTextView.setText(foodList.get((int)id).getName());
+                //nameTextView.setId(viewID++);
 
+                //newFood.setImageResource(R.drawable.i1);
                 // Find the ImageView in the list_item.xml layout with the ID list_item_icon
                 ImageView iconView = (ImageView) newFood.findViewById(R.id.list_item_icon);
                 iconView.setImageResource(R.drawable.i1);
                 iconView.setId(viewID++);
+
+                newFood.setTag(R.string.food_points, points);
                 
                 //newFood.setLayoutParams(v.getLayoutParams());
                 Rect rectf = new Rect();
@@ -96,8 +105,13 @@ public class Maggy extends AppCompatActivity {
                 Log.d(TAG, "position: "+ rectf.left + " " + rectf.top);
                 root.addView(newFood);
                 newFood.setElevation(8);
-
-
+                
+                Transition move = new ChangeTransform()
+                        .addTarget(newFood)
+                        .setDuration(2000)
+                        .setInterpolator(new DecelerateInterpolator());
+              
+                TransitionManager.beginDelayedTransition(root, move);
 
                 root.removeView(newFood);
 
@@ -105,81 +119,79 @@ public class Maggy extends AppCompatActivity {
                 newFood.setY(0);
 
                 newFood.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
-                newFood.setPadding(4,4,4,4);
-                newFood.setElevation(8);
+                newFood.setPadding(2,2,2,2);
+                newFood.setElevation(4);
 
 
-                if (points > 0) {
-                    tableP.addView(newFood, 0);
-                    pScorePoints += points;
-                    pScore.setText(String.valueOf(pScorePoints));
-                } else {
-                    tableN.addView(newFood, 0);
-                    nScorePoints += points;
-                    nScore.setText(String.valueOf(nScorePoints));
-                }
+                setPoints(points);
+                
+                newFood.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ((LinearLayout) v.getParent()).removeView(v);
+                        int viewPoints = (int) v.getTag(R.string.food_points);
+                        scorePoints -= viewPoints;
+                        setScore(scorePoints);
+                        if (viewPoints > 0) {
+                            pScorePoints -= viewPoints;
+                            pScore.setText("+" + String.valueOf(pScorePoints));
+                        } else {
+                            nScorePoints -= viewPoints;
+                            nScore.setText(String.valueOf(nScorePoints));
+                        }
+                    }
+                });
             }
         });
     }
 
-    public static AnimatorSet getViewToViewScalingAnimator(final RelativeLayout parentView,
-                                                           final View viewToAnimate,
-                                                           final Rect fromViewRect,
-                                                           final Rect toViewRect,
-                                                           final long duration,
-                                                           final long startDelay) {
-        // get all coordinates at once
-        final Rect parentViewRect = new Rect(), viewToAnimateRect = new Rect();
-        parentView.getGlobalVisibleRect(parentViewRect);
-        viewToAnimate.getGlobalVisibleRect(viewToAnimateRect);
+    public void setPoints(int points) {
+        if (points > 0) {
+            tableP.addView(newFood, 0);
+            pScorePoints += points;
+            pScore.setText("+" + String.valueOf(pScorePoints));
+        } else {
+            tableN.addView(newFood, 0);
+            nScorePoints += points;
+            nScore.setText(String.valueOf(nScorePoints));
+        }
+    }
 
-        viewToAnimate.setScaleX(1f);
-        viewToAnimate.setScaleY(1f);
-
-        // rescaling of the object on X-axis
-        final ValueAnimator valueAnimatorWidth = ValueAnimator.ofInt(fromViewRect.width(), toViewRect.width());
-        valueAnimatorWidth.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                // Get animated width value update
-                int newWidth = (int) valueAnimatorWidth.getAnimatedValue();
-
-                // Get and update LayoutParams of the animated view
-                RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) viewToAnimate.getLayoutParams();
-
-                lp.width = newWidth;
-                viewToAnimate.setLayoutParams(lp);
-            }
-        });
-
-        // rescaling of the object on Y-axis
-        final ValueAnimator valueAnimatorHeight = ValueAnimator.ofInt(fromViewRect.height(), toViewRect.height());
-        valueAnimatorHeight.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                // Get animated width value update
-                int newHeight = (int) valueAnimatorHeight.getAnimatedValue();
-
-                // Get and update LayoutParams of the animated view
-                RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) viewToAnimate.getLayoutParams();
-                lp.height = newHeight;
-                viewToAnimate.setLayoutParams(lp);
-            }
-        });
-
-        // moving of the object on X-axis
-        ObjectAnimator translateAnimatorX = ObjectAnimator.ofFloat(viewToAnimate, "X", fromViewRect.left - parentViewRect.left, toViewRect.left - parentViewRect.left);
-
-        // moving of the object on Y-axis
-        ObjectAnimator translateAnimatorY = ObjectAnimator.ofFloat(viewToAnimate, "Y", fromViewRect.top - parentViewRect.top, toViewRect.top - parentViewRect.top);
-
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.setInterpolator(new DecelerateInterpolator(1f));
-        animatorSet.setDuration(duration); // can be decoupled for each animator separately
-        animatorSet.setStartDelay(startDelay); // can be decoupled for each animator separately
-        animatorSet.playTogether(valueAnimatorWidth, valueAnimatorHeight, translateAnimatorX, translateAnimatorY);
-
-        return animatorSet;
+    public void setScore(int points) {
+        if (scorePoints > 0) {
+            score.setText("+" + String.valueOf(scorePoints));
+        } else {
+            score.setText(String.valueOf(scorePoints));
+        }
+    }
+  
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.bar_menu, menu);
+        return true;
+    }
+  
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.reset:
+                Maggy.this.recreate();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+  
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+  
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+       super.onRestoreInstanceState(savedInstanceState);
     }
 
     private class GetFood extends AsyncTask<Void, Void, Void> {
