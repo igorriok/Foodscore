@@ -3,5 +3,9 @@
     <string name="VS">VS</string>
     <string name="reset">Reset</string>
     <string name="food_points">200</string>
+    <string name="food_id">201</string>
+    <string name="score_pref">scorePref</string>
+    <string name="p_pref">pPref</string>
+    <string name="n_pref">nPref</string>
 
 </resources>

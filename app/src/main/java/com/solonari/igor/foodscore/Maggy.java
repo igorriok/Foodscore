@@ -1,6 +1,8 @@
 package com.solonari.igor.foodscore;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -30,26 +32,36 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class Maggy extends AppCompatActivity {
 
     private ProgressDialog pDialog;
     final String TAG = "Maggy";
     ArrayList<Food> foodList;
-    GridView gridview;
+    GridView gridView;
     TextView score;
     TextView nScore;
     TextView pScore;
     int scorePoints = 0;
     int nScorePoints = 0;
     int pScorePoints = 0;
-    float animDur = 1;
+    String NEG_SCORE = "nScorePoints";
+    String POS_SCORE = "pScorePoints";
+    String NEG_VIEWS = "nViews";
+    String POS_VIEWS = "pViews";
     LinearLayout tableN;
     LinearLayout tableP;
     int viewID = 100;
     ConstraintLayout root;
     View newFood;
-    int FOOD_POINTS = 1;
+    SharedPreferences.Editor scoreEditor;
+    SharedPreferences scorePref;
+    SharedPreferences.Editor pEditor;
+    SharedPreferences pPref;
+    SharedPreferences.Editor nEditor;
+    SharedPreferences nPref;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +70,8 @@ public class Maggy extends AppCompatActivity {
 
         setSupportActionBar((Toolbar) findViewById(R.id.my_toolbar));
         foodList = new ArrayList<>();
-        gridview = (GridView) findViewById(R.id.gridview);
-        //gridview.setColumnWidth(200);
+        gridView = (GridView) findViewById(R.id.gridview);
+        //gridView.setColumnWidth(200);
         new GetFood().execute();
         score = (TextView) findViewById(R.id.fScoreText);
         nScore = (TextView) findViewById(R.id.nScoreText);
@@ -68,12 +80,16 @@ public class Maggy extends AppCompatActivity {
         tableP = (LinearLayout) findViewById(R.id.tableP);
         root = (ConstraintLayout) findViewById(R.id.root);
 
-        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        scorePref = Maggy.this.getSharedPreferences(getString(R.string.score_pref), Context.MODE_PRIVATE);
+        pPref = Maggy.this.getSharedPreferences(getString(R.string.p_pref), Context.MODE_PRIVATE);
+        nPref = Maggy.this.getSharedPreferences(getString(R.string.n_pref), Context.MODE_PRIVATE);
+        
+        setState();
+
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 //Toast.makeText(Maggy.this, "Position: " + position + ", id: " + id, Toast.LENGTH_LONG).show();
-                int points = foodList.get((int)id).getScore();
-                scorePoints += points;
-                setScore(scorePoints);
+                int points = (int) v.getTag(R.string.food_points);
                 //newFood = new ImageView(Maggy.this);
                 newFood = View.inflate(Maggy.this, R.layout.list_item, null);
                 newFood.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
@@ -92,6 +108,7 @@ public class Maggy extends AppCompatActivity {
                 iconView.setId(viewID++);
 
                 newFood.setTag(R.string.food_points, points);
+                newFood.setTag(R.string.food_id, v.getTag(R.string.food_id));
                 
                 //newFood.setLayoutParams(v.getLayoutParams());
                 Rect rectf = new Rect();
@@ -121,8 +138,7 @@ public class Maggy extends AppCompatActivity {
                 newFood.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
                 newFood.setPadding(2,2,2,2);
                 newFood.setElevation(4);
-
-
+                
                 setPoints(points);
                 
                 newFood.setOnClickListener(new View.OnClickListener() {
@@ -131,7 +147,7 @@ public class Maggy extends AppCompatActivity {
                         ((LinearLayout) v.getParent()).removeView(v);
                         int viewPoints = (int) v.getTag(R.string.food_points);
                         scorePoints -= viewPoints;
-                        setScore(scorePoints);
+                        setScore();
                         if (viewPoints > 0) {
                             pScorePoints -= viewPoints;
                             pScore.setText("+" + String.valueOf(pScorePoints));
@@ -155,13 +171,72 @@ public class Maggy extends AppCompatActivity {
             nScorePoints += points;
             nScore.setText(String.valueOf(nScorePoints));
         }
+        setScore();
+        saveState();
+    }
+  
+    public void setState() {
+        nScorePoints = scorePref.getInt(NEG_SCORE, 0);
+        pScorePoints = scorePref.getInt(POS_SCORE, 0);
+        pScore.setText("+" + String.valueOf(pScorePoints));
+        nScore.setText(String.valueOf(nScorePoints));
+        setScore();
+      
+        Map<String, ?> pViews = pPref.getAll();
+        for (Map.Entry<String,?> entry : pViews.entrySet()) {
+            View oldFood = View.inflate(Maggy.this, R.layout.list_item, null);
+            oldFood.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+            ImageView iconView = (ImageView) oldFood.findViewById(R.id.list_item_icon);
+            iconView.setImageResource(R.drawable.i1);
+            iconView.setId(viewID++);
+            oldFood.setPadding(2,2,2,2);
+            oldFood.setElevation(4);
+            oldFood.setTag(R.string.food_id, entry.getValue());
+            //Log.d(TAG, Object.toString(pViews.get(i)));
+            tableP.addView(oldFood, 0);
+        }
+
+        Map<String, ?> nViews = nPref.getAll();
+        for (Map.Entry<String,?> entry : nViews.entrySet()) {
+            View oldFood = View.inflate(Maggy.this, R.layout.list_item, null);
+            oldFood.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+            ImageView iconView = (ImageView) oldFood.findViewById(R.id.list_item_icon);
+            iconView.setImageResource(R.drawable.i1);
+            iconView.setId(viewID++);
+            oldFood.setPadding(2,2,2,2);
+            oldFood.setElevation(4);
+            oldFood.setTag(R.string.food_id, entry.getValue());
+            tableN.addView(oldFood, 0);
+        }
+    }
+  
+    public void saveState() {
+        scoreEditor = scorePref.edit();
+        scoreEditor.putInt(POS_SCORE, pScorePoints);
+        scoreEditor.putInt(NEG_SCORE, nScorePoints);
+        scoreEditor.apply();
+
+        pEditor = pPref.edit();
+        for (int i=0; i<tableP.getChildCount(); i++) {
+            View view = tableP.getChildAt(i);
+            pEditor.putInt(Integer.toString(i), (int) view.getTag(R.string.food_id));
+            Log.d(TAG, Integer.toString((int)view.getTag(R.string.food_id)));
+        }
+        pEditor.apply();
+
+        nEditor = nPref.edit();
+        for (int i=0; i<tableN.getChildCount(); i++) {
+            nEditor.putInt(Integer.toString(i), (int) tableN.getChildAt(i).getTag(R.string.food_id));
+        }
+        nEditor.apply();
     }
 
-    public void setScore(int points) {
-        if (scorePoints > 0) {
-            score.setText("+" + String.valueOf(scorePoints));
+    public void setScore() {
+        int points = nScorePoints + pScorePoints;
+        if (points > 0) {
+            score.setText("+" + String.valueOf(points));
         } else {
-            score.setText(String.valueOf(scorePoints));
+            score.setText(String.valueOf(points));
         }
     }
   
@@ -177,7 +252,11 @@ public class Maggy extends AppCompatActivity {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.reset:
-                Maggy.this.recreate();
+                tableN.removeAllViews();
+                tableP.removeAllViews();
+                pScore.setText("0");
+                score.setText("0");
+                nScore.setText("0");
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -192,6 +271,19 @@ public class Maggy extends AppCompatActivity {
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
        super.onRestoreInstanceState(savedInstanceState);
+    }
+  
+    public void setColor(int points) {
+        for (int i = 5; i <= 80; i= i*2) {
+            if (points > i && points <= i*2) {
+                int resourceId = this.getResources().getIdentifier("P" + i, "color", this.getPackageName());
+                gridView.setBackgroundResource(resourceId);
+            }
+            if (points < -i && points >= -i*2) {
+                int resourceId = this.getResources().getIdentifier("PN" + i, "color", this.getPackageName());
+                gridView.setBackgroundResource(resourceId);
+            }
+        }
     }
 
     private class GetFood extends AsyncTask<Void, Void, Void> {
@@ -287,7 +379,7 @@ public class Maggy extends AppCompatActivity {
              * Updating parsed JSON data into GridView
              * */
             FoodAdapter foodAdapter = new FoodAdapter(Maggy.this, foodList);
-            gridview.setAdapter(foodAdapter);
+            gridView.setAdapter(foodAdapter);
             Log.d(TAG, "foodAdapter set");
         }
     }
