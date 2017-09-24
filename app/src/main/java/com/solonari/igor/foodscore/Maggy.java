@@ -3,6 +3,7 @@ package com.solonari.igor.foodscore;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -54,6 +55,7 @@ public class Maggy extends AppCompatActivity {
     LinearLayout tableP;
     int viewID = 100;
     ConstraintLayout root;
+    ConstraintLayout nPanel;
     View newFood;
     SharedPreferences.Editor scoreEditor;
     SharedPreferences scorePref;
@@ -61,6 +63,8 @@ public class Maggy extends AppCompatActivity {
     SharedPreferences pPref;
     SharedPreferences.Editor nEditor;
     SharedPreferences nPref;
+    View scroll;
+    Toolbar myToolbar;
 
 
     @Override
@@ -68,18 +72,24 @@ public class Maggy extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maggy);
 
-        setSupportActionBar((Toolbar) findViewById(R.id.my_toolbar));
+        myToolbar = findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
+        myToolbar.setTitleTextColor(Color.WHITE);
+      
         foodList = new ArrayList<>();
         foodMap = new HashMap<>();
         gridView = (GridView) findViewById(R.id.gridview);
         //gridView.setColumnWidth(200);
         new GetFood().execute();
-        score = (TextView) findViewById(R.id.fScoreText);
-        nScore = (TextView) findViewById(R.id.nScoreText);
-        pScore = (TextView) findViewById(R.id.pScoreText);
-        tableN = (LinearLayout) findViewById(R.id.tableN);
-        tableP = (LinearLayout) findViewById(R.id.tableP);
-        root = (ConstraintLayout) findViewById(R.id.root);
+        score = findViewById(R.id.fScoreText);
+        nScore = findViewById(R.id.nScoreText);
+        pScore = findViewById(R.id.pScoreText);
+        tableN = findViewById(R.id.tableN);
+        tableP = findViewById(R.id.tableP);
+        root = findViewById(R.id.root);
+        scroll = findViewById(R.id.scroll);
+        //nPanel = findViewById(R.id.nScore);
+        //nPanel.setClipToOutline(true);
 
         scorePref = Maggy.this.getSharedPreferences(getString(R.string.score_pref), Context.MODE_PRIVATE);
         pPref = Maggy.this.getSharedPreferences(getString(R.string.p_pref), Context.MODE_PRIVATE);
@@ -89,6 +99,7 @@ public class Maggy extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 //Toast.makeText(Maggy.this, "Position: " + position + ", id: " + id, Toast.LENGTH_LONG).show();
                 int points = (int) v.getTag(R.string.food_points);
+                Log.d(TAG, "view points: " + points);
                 //newFood = new ImageView(Maggy.this);
                 newFood = View.inflate(Maggy.this, R.layout.list_item, null);
                 newFood.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
@@ -102,8 +113,9 @@ public class Maggy extends AppCompatActivity {
 
                 //newFood.setImageResource(R.drawable.i1);
                 // Find the ImageView in the list_item.xml layout with the ID list_item_icon
-                ImageView iconView = (ImageView) newFood.findViewById(R.id.list_item_icon);
-                iconView.setImageResource(R.drawable.i1);
+                ImageView iconView = newFood.findViewById(R.id.list_item_icon);
+                int imgRes = Maggy.this.getResources().getIdentifier("f" + foodList.get((int)id).getID(), "drawable", Maggy.this.getPackageName());
+                iconView.setImageResource(imgRes);
                 iconView.setId(viewID++);
 
                 newFood.setTag(R.string.food_points, points);
@@ -141,7 +153,7 @@ public class Maggy extends AppCompatActivity {
                 newFood.setY(0);
 
                 //newFood.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
-                newFood.setPadding(2,2,2,2);
+                newFood.setPadding(4,4,4,4);
                 newFood.setElevation(4);
 
                 setPoints(points, newFood);
@@ -156,11 +168,15 @@ public class Maggy extends AppCompatActivity {
         if (points > 0) {
             tableP.addView(newView, 0);
             newFood.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+            newFood.setPadding(4,4,4,4);
+            newFood.setElevation(4);
             pScorePoints += points;
             pScore.setText("+" + String.valueOf(pScorePoints));
         } else {
             tableN.addView(newView, 0);
             newFood.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+            newFood.setPadding(4,4,4,4);
+            newFood.setElevation(4);
             nScorePoints += points;
             nScore.setText(String.valueOf(nScorePoints));
         }
@@ -179,6 +195,8 @@ public class Maggy extends AppCompatActivity {
         for (Map.Entry<String,?> entry : pViews.entrySet()) {
             View oldFood = createView(Integer.valueOf(entry.getValue().toString()));
             tableP.addView(oldFood, 0);
+            oldFood.setPadding(4,4,4,4);
+            oldFood.setElevation(4);
             addClickListener(oldFood);
         }
 
@@ -186,6 +204,8 @@ public class Maggy extends AppCompatActivity {
         for (Map.Entry<String,?> entry : nViews.entrySet()) {
             View oldFood = createView(Integer.valueOf(entry.getValue().toString()));
             tableN.addView(oldFood, 0);
+            oldFood.setPadding(4,4,4,4);
+            oldFood.setElevation(4);
             addClickListener(oldFood);
         }
     }
@@ -212,8 +232,9 @@ public class Maggy extends AppCompatActivity {
     public View createView (int id) {
         View oldFood = View.inflate(Maggy.this, R.layout.list_item, null);
         oldFood.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
-        ImageView iconView = (ImageView) oldFood.findViewById(R.id.list_item_icon);
-        iconView.setImageResource(R.drawable.i1);
+        ImageView iconView = oldFood.findViewById(R.id.list_item_icon);
+        int imgRes = this.getResources().getIdentifier("f" + id, "drawable", this.getPackageName());
+        iconView.setImageResource(imgRes);
         iconView.setId(viewID++);
         oldFood.setPadding(2,2,2,2);
         oldFood.setElevation(4);
@@ -270,7 +291,7 @@ public class Maggy extends AppCompatActivity {
                 pScorePoints = 0;
                 nScorePoints = 0;
                 pScore.setText("+" + String.valueOf(pScorePoints));
-                nScore.setText("+" + String.valueOf(nScorePoints));
+                nScore.setText(String.valueOf(nScorePoints));
                 setScore();
                 saveState();
                 return true;
@@ -290,14 +311,25 @@ public class Maggy extends AppCompatActivity {
     }
   
     public void setColor(int points) {
+        if (points > -5 && points < 5) {
+            gridView.setBackgroundResource(R.color.PL0);
+            scroll.setBackgroundResource(R.color.PL0);
+            myToolbar.setBackgroundResource(R.color.P0);
+        }
         for (int i = 5; i <= 80; i= i*2) {
-            if (points > i && points <= i*2) {
-                int resourceId = this.getResources().getIdentifier("P" + i, "color", this.getPackageName());
-                gridView.setBackgroundResource(resourceId);
+            if (points >= i && points < i*2) {
+                int PLResourse = this.getResources().getIdentifier("PL" + i, "color", this.getPackageName());
+                gridView.setBackgroundResource(PLResourse);
+                scroll.setBackgroundResource(PLResourse);
+                int PResource = this.getResources().getIdentifier("P" + i, "color", this.getPackageName());
+                myToolbar.setBackgroundResource(PResource);
             }
-            if (points < -i && points >= -i*2) {
-                int resourceId = this.getResources().getIdentifier("PN" + i, "color", this.getPackageName());
-                gridView.setBackgroundResource(resourceId);
+            if (points <= -i && points > -i*2) {
+                int NLResource = this.getResources().getIdentifier("NL" + i, "color", this.getPackageName());
+                gridView.setBackgroundResource(NLResource);
+                scroll.setBackgroundResource(NLResource);
+                int NResource = this.getResources().getIdentifier("N" + i, "color", this.getPackageName());
+                myToolbar.setBackgroundResource(NResource);
             }
         }
     }

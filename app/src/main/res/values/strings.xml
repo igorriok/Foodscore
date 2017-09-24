@@ -7,5 +7,56 @@
     <string name="score_pref">scorePref</string>
     <string name="p_pref">pPref</string>
     <string name="n_pref">nPref</string>
+    <string name="dark_side">Dark side</string>
+    <string name="light_side">Light side</string>
+    
+    <string name="food1">Hamburger</string>
+    <string name="food2">Cheeseburger</string>
+    <string name="food3">Chips</string>
+    <string name="food4">French fries</string>
+    <string name="food5">Salad</string>
+    <string name="food6">Vegetables</string>
+    <string name="food7">Fruits</string>
+    <string name="food8">Steak</string>
+    <string name="food9">Soup</string>
+    <string name="food10">Kebab</string>
+    <string name="food11">Doughnut</string>
+    <string name="food12">Croissant</string>
+    <string name="food13">Pizza</string>
+    <string name="food14">Cola</string>
+    <string name="food15">Diet Cola</string>
+    <string name="food16">Milk</string>
+    <string name="food17">Flavored milk</string>
+    <string name="food18">Chocolate</string>
+    <string name="food19">Dark chocolate</string>
+    <string name="food20">Bacon</string>
+    <string name="food21">Eggs</string>
+    <string name="food22">Waffles</string>
+    <string name="food23">Biscuits</string>
+    <string name="food24">Cookies</string>
+    <string name="food25">Ice Cream</string>
+    <string name="food26">Taco</string>
+    <string name="food27">Oatmeal</string>
+    <string name="food28">Apple</string>
+    <string name="food29">Banana</string>
+    <string name="food30">Cheese</string>
+    <string name="food31">Sandwich</string>
+    <string name="food32">Coffee</string>
+    <string name="food33">Instant coffee</string>
+    <string name="food34">Water</string>
+    <string name="food35">Fish</string>
+    <string name="food36">Cake</string>
+    <string name="food37">Baked turkey</string>
+    <string name="food38">Hotdog</string>
+    <string name="food39">Tomato</string>
+    <string name="food40">Cabbage</string>
+    <string name="food41">Energy drink</string>
+    <string name="food42">Tea</string>
+    <string name="food43">Green Tea</string>
+    <string name="food44">Nuts</string>
+    <string name="food45">Juice</string>
+    <string name="food46">Strong Alcoholic Drink</string>
+    <string name="food47">Weak Alcoholic Drink</string>
+
 
 </resources>
