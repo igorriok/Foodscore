@@ -1,5 +1,6 @@
 package com.solonari.igor.foodscore;
 
+import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -33,8 +34,10 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class Maggy extends AppCompatActivity {
 
@@ -43,28 +46,18 @@ public class Maggy extends AppCompatActivity {
     ArrayList<Food> foodList;
     HashMap<Integer, Integer> foodMap;
     GridView gridView;
-    TextView score;
-    TextView nScore;
-    TextView pScore;
-    int scorePoints = 0;
-    int nScorePoints = 0;
-    int pScorePoints = 0;
+    TextView score, nScore, pScore;
+    int category, pScorePoints, scorePoints, nScorePoints = 0;
     String NEG_SCORE = "nScorePoints";
     String POS_SCORE = "pScorePoints";
-    LinearLayout tableN;
-    LinearLayout tableP;
+    LinearLayout tableN, tableP;
     int viewID = 100;
     ConstraintLayout root;
-    ConstraintLayout nPanel;
-    View newFood;
-    SharedPreferences.Editor scoreEditor;
-    SharedPreferences scorePref;
-    SharedPreferences.Editor pEditor;
-    SharedPreferences pPref;
-    SharedPreferences.Editor nEditor;
-    SharedPreferences nPref;
-    View scroll;
+    SharedPreferences.Editor pEditor, nEditor, scoreEditor;
+    SharedPreferences nPref, pPref, scorePref, instPref;
+    View scroll, newFood;
     Toolbar myToolbar;
+    Random rnd;
 
 
     @Override
@@ -75,6 +68,11 @@ public class Maggy extends AppCompatActivity {
         myToolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
         myToolbar.setTitleTextColor(Color.WHITE);
+
+        instPref = Maggy.this.getSharedPreferences(getString(R.string.instPref), Context.MODE_PRIVATE);
+        if (instPref.getBoolean(getString(R.string.showInst), true)) {
+            showNoticeDialog();
+        }
       
         foodList = new ArrayList<>();
         foodMap = new HashMap<>();
@@ -91,6 +89,8 @@ public class Maggy extends AppCompatActivity {
         //nPanel = findViewById(R.id.nScore);
         //nPanel.setClipToOutline(true);
 
+        rnd = new Random();
+
         scorePref = Maggy.this.getSharedPreferences(getString(R.string.score_pref), Context.MODE_PRIVATE);
         pPref = Maggy.this.getSharedPreferences(getString(R.string.p_pref), Context.MODE_PRIVATE);
         nPref = Maggy.this.getSharedPreferences(getString(R.string.n_pref), Context.MODE_PRIVATE);
@@ -101,7 +101,7 @@ public class Maggy extends AppCompatActivity {
                 int points = (int) v.getTag(R.string.food_points);
                 Log.d(TAG, "view points: " + points);
                 //newFood = new ImageView(Maggy.this);
-                newFood = View.inflate(Maggy.this, R.layout.list_item, null);
+                newFood = View.inflate(Maggy.this, R.layout.list_item2, null);
                 newFood.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
                 newFood.setPadding(4,4,4,4);
 
@@ -161,6 +161,11 @@ public class Maggy extends AppCompatActivity {
                 addClickListener(newFood);
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     public void setPoints(int points, View newView) {
@@ -323,6 +328,12 @@ public class Maggy extends AppCompatActivity {
                 scroll.setBackgroundResource(PLResourse);
                 int PResource = this.getResources().getIdentifier("P" + i, "color", this.getPackageName());
                 myToolbar.setBackgroundResource(PResource);
+                if (category != i) {
+                    int rndNumber = rnd.nextInt(11);
+                    int toastText = this.getResources().getIdentifier("pt" + rndNumber, "string", this.getPackageName());
+                    Toast.makeText(getApplicationContext(), getString(toastText), Toast.LENGTH_SHORT).show();
+                    category = i;
+                }
             }
             if (points <= -i && points > -i*2) {
                 int NLResource = this.getResources().getIdentifier("NL" + i, "color", this.getPackageName());
@@ -330,8 +341,20 @@ public class Maggy extends AppCompatActivity {
                 scroll.setBackgroundResource(NLResource);
                 int NResource = this.getResources().getIdentifier("N" + i, "color", this.getPackageName());
                 myToolbar.setBackgroundResource(NResource);
+                if (category != i) {
+                    int rndNumber = rnd.nextInt(10);
+                    int toastText = this.getResources().getIdentifier("nt" + rndNumber, "string", this.getPackageName());
+                    Toast.makeText(getApplicationContext(), getString(toastText), Toast.LENGTH_SHORT).show();
+                    category = i;
+                }
             }
         }
+    }
+  
+    public void showNoticeDialog() {
+        // Create an instance of the dialog fragment and show it
+        DialogFragment instructionsDialog = new InstructionFragment();
+        instructionsDialog.show(getFragmentManager(), "instFragment");
     }
 
     private class GetFood extends AsyncTask<Void, Void, Void> {
@@ -339,12 +362,12 @@ public class Maggy extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            // Showing progress dialog
+            /* Showing progress dialog
             pDialog = new ProgressDialog(Maggy.this);
             pDialog.setMessage("Please wait...");
             pDialog.setCancelable(false);
             pDialog.show();
-
+            */
         }
 
         @Override
@@ -376,17 +399,23 @@ public class Maggy extends AppCompatActivity {
                         JSONObject c = foodArray.getJSONObject(i);
 
                         int id = c.getInt("ID");
-                        String name = c.getString("Name");
                         int score = c.getInt("score");
-                        int popularity = c.getInt("popularity");
+
+                        int foodName = Maggy.this.getResources().getIdentifier("food" + id, "string", Maggy.this.getPackageName());
+                        //Log.d(TAG, Integer.toString(foodName));
+                        String name = getResources().getString(foodName);
+                        //Log.d(TAG, id + ", " + name);
 
                         // tmp hash map for single contact
-                        Food contact = new Food(id, name, score, popularity);
+                        Food contact = new Food(id, name, score);
                         // adding contact to contact list
                         foodList.add(contact);
                       
                         foodMap.put(id, score);
                     }
+
+                    Collections.sort(foodList);
+
                     Log.d(TAG, "foodList created: " + foodList.toString());
                 } catch (final JSONException e) {
                     Log.e(TAG, "Json parsing error: " + e.getMessage());
@@ -421,9 +450,10 @@ public class Maggy extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            // Dismiss the progress dialog
+            /* Dismiss the progress dialog
             if (pDialog.isShowing())
                 pDialog.dismiss();
+            */
             /**
              * Updating parsed JSON data into GridView
              * */

@@ -1,286 +1,212 @@
 {
   "foodList": [
-     {
-       "ID": 28,
-       "Name": "Apple",
-       "score": 3,
-       "popularity": 0
-     },
-     {
-       "ID": 20,
-       "Name": "Bacon",
-       "score": -1,
-       "popularity": 2
-     },
-     {
-       "ID": 37,
-       "Name": "Baked turkey",
-       "score": 1,
-       "popularity": 0
-     },
-     {
-       "ID": 29,
-       "Name": "Banana",
-       "score": 2,
-       "popularity": 1
-     },
-     {
-       "ID": 23,
-       "Name": "Biscuits",
-       "score": -2,
-       "popularity": 0
-     },
-     {
-       "ID": 40,
-       "Name": "Cabbage",
-       "score": 3,
-       "popularity": 0
-     },
-     {
-       "ID": 36,
-       "Name": "Cake",
-       "score": -2,
-       "popularity": 0
-     },
-     {
-       "ID": 30,
-       "Name": "Cheese",
-       "score": -1,
-       "popularity": 0
-     },
-     {
-       "ID": 2,
-       "Name": "Cheeseburger",
-       "score": -2,
-       "popularity": 0
-     },
-     {
-       "ID": 3,
-       "Name": "Chips",
-       "score": -2,
-       "popularity": 0
-     },
-     {
-       "ID": 18,
-       "Name": "Chocolate",
-       "score": -2,
-       "popularity": 0
-     },
-     {
-       "ID": 32,
-       "Name": "Coffee",
-       "score": -1,
-       "popularity": 1
-     },
-     {
-       "ID": 14,
-       "Name": "Cola",
-       "score": -3,
-       "popularity": 1
-     },
-     {
-       "ID": 24,
-       "Name": "Cookies",
-       "score": -1,
-       "popularity": 1
-     },
-     {
-       "ID": 12,
-       "Name": "Croissant",
-       "score": -3,
-       "popularity": 0
-     },
-     {
-       "ID": 19,
-       "Name": "Dark chocolate",
-       "score": 1,
-       "popularity": 0
-     },
-     {
-       "ID": 15,
-       "Name": "Diet Cola",
-       "score": -1,
-       "popularity": 1
-     },
-     {
-       "ID": 11,
-       "Name": "Doughnut",
-       "score": -3,
-       "popularity": 1
-     },
-     {
-       "ID": 21,
-       "Name": "Eggs",
-       "score": 1,
-       "popularity": 1
-     },
-     {
-       "ID": 41,
-       "Name": "Energy drink",
-       "score": -3,
-       "popularity": 0
-     },
-     {
-       "ID": 35,
-       "Name": "Fish",
-       "score": 1,
-       "popularity": 0
-     },
-     {
-       "ID": 17,
-       "Name": "Flavored milk",
-       "score": -3,
-       "popularity": 0
-     },
-     {
-       "ID": 4,
-       "Name": "French fries",
-       "score": -3,
-       "popularity": 0
-     },
-     {
-       "ID": 7,
-       "Name": "Fruits",
-       "score": 2,
-       "popularity": 0
-     },
-     {
-       "ID": 43,
-       "Name": "Green Tea",
-       "score": 3,
-       "popularity": 0
-     },
-     {
-       "ID": 1,
-       "Name": "Hamburger",
-       "score": -2,
-       "popularity": 0
-     },
-     {
-       "ID": 38,
-       "Name": "Hotdog",
-       "score": -2,
-       "popularity": 1
-     },
-     {
-       "ID": 25,
-       "Name": "Ice Cream",
-       "score": -2,
-       "popularity": 1
-     },
-     {
-       "ID": 33,
-       "Name": "Instant coffee",
-       "score": -3,
-       "popularity": 1
-     },
-     {
-       "ID": 45,
-       "Name": "Juice",
-       "score": -1,
-       "popularity": 0
-     },
-     {
-       "ID": 10,
-       "Name": "Kebab",
-       "score": -2,
-       "popularity": 0
-     },
-     {
-       "ID": 16,
-       "Name": "Milk",
-       "score": -1,
-       "popularity": 1
-     },
-     {
-       "ID": 44,
-       "Name": "Nuts",
-       "score": 2,
-       "popularity": 0
-     },
-     {
-       "ID": 27,
-       "Name": "Oatmeal",
-       "score": 3,
-       "popularity": 0
-     },
-     {
-       "ID": 13,
-       "Name": "Pizza",
-       "score": -3,
-       "popularity": 2
-     },
-     {
-       "ID": 5,
-       "Name": "Salad",
-       "score": 2,
-       "popularity": 0
-     },
-     {
-       "ID": 31,
-       "Name": "Sandwich",
-       "score": -1,
-       "popularity": 0
-     },
-     {
-       "ID": 9,
-       "Name": "Soup",
-       "score": 1,
-       "popularity": 0
-     },
-     {
-       "ID": 8,
-       "Name": "Steak",
-       "score": 1,
-       "popularity": 0
-     },
-     {
-       "ID": 46,
-       "Name": "Strong Alcoholic Drink",
-       "score": -3,
-       "popularity": 0
-     },
-     {
-       "ID": 26,
-       "Name": "Taco",
-       "score": -2,
-       "popularity": 1
-     },
-     {
-       "ID": 42,
-       "Name": "Tea",
-       "score": 1,
-       "popularity": 0
-     },
-     {
-       "ID": 39,
-       "Name": "Tomato",
-       "score": 3,
-       "popularity": 0
-     },
-     {
-       "ID": 6,
-       "Name": "Vegetables",
-       "score": 2,
-       "popularity": 0
-     },
-     {
-       "ID": 22,
-       "Name": "Waffles",
-       "score": -1,
-       "popularity": 0
-     },
-     {
-       "ID": 34,
-       "Name": "Water",
-       "score": 3,
-       "popularity": 1
-     },
-     {
-       "ID": 47,
-       "Name": "Weak Alcoholic Drink",
-       "score": -2,
-       "popularity": 1
-     }
+    {
+      "ID": 1,
+      "score": -2
+    },
+    {
+      "ID": 2,
+      "score": -2
+    },
+    {
+      "ID": 3,
+      "score": -2
+    },
+    {
+      "ID": 4,
+      "score": -3
+    },
+    {
+      "ID": 5,
+      "score": 2
+    },
+    {
+      "ID": 6,
+      "score": 2
+    },
+    {
+      "ID": 7,
+      "score": 2
+    },
+    {
+      "ID": 8,
+      "score": 1
+    },
+    {
+      "ID": 9,
+      "score": 1
+    },
+    {
+      "ID": 10,
+      "score": -2
+    },
+    {
+      "ID": 11,
+      "score": -3
+    },
+    {
+      "ID": 12,
+      "score": -3
+    },
+    {
+      "ID": 13,
+      "score": -3
+    },
+    {
+      "ID": 14,
+      "score": -3
+    },
+    {
+      "ID": 15,
+      "score": -1
+    },
+    {
+      "ID": 16,
+      "score": -1
+    },
+    {
+      "ID": 17,
+      "score": -3
+    },
+    {
+      "ID": 18,
+      "score": -2
+    },
+    {
+      "ID": 19,
+      "score": 1
+    },
+    {
+      "ID": 20,
+      "score": -1
+    },
+    {
+      "ID": 21,
+      "score": 1
+    },
+    {
+      "ID": 22,
+      "score": -1
+    },
+    {
+      "ID": 23,
+      "score": -2
+    },
+    {
+      "ID": 24,
+      "score": -1
+    },
+    {
+      "ID": 25,
+      "score": -2
+    },
+    {
+      "ID": 26,
+      "score": -2
+    },
+    {
+      "ID": 27,
+      "score": 3
+    },
+    {
+      "ID": 28,
+      "score": 3
+    },
+    {
+      "ID": 29,
+      "score": 2
+    },
+    {
+      "ID": 30,
+      "score": -1
+    },
+    {
+      "ID": 31,
+      "score": -1
+    },
+    {
+      "ID": 32,
+      "score": -1
+    },
+    {
+      "ID": 33,
+      "score": -3
+    },
+    {
+      "ID": 34,
+      "score": 3
+    },
+    {
+      "ID": 35,
+      "score": 1
+    },
+    {
+      "ID": 36,
+      "score": -2
+    },
+    {
+      "ID": 37,
+      "score": 1
+    },
+    {
+      "ID": 38,
+      "score": -2
+    },
+    {
+      "ID": 39,
+      "score": 3
+    },
+    {
+      "ID": 40,
+      "score": 3
+    },
+    {
+      "ID": 41,
+      "score": -3
+    },
+    {
+      "ID": 42,
+      "score": 1
+    },
+    {
+      "ID": 43,
+      "score": 3
+    },
+    {
+      "ID": 44,
+      "score": 2
+    },
+    {
+      "ID": 45,
+      "score": -1
+    },
+    {
+      "ID": 46,
+      "score": -3
+    },
+    {
+      "ID": 47,
+      "score": -2
+    },
+    {
+      "ID": 48,
+      "score": -3
+    },
+    {
+      "ID": 49,
+      "score": -3
+    },
+    {
+      "ID": 50,
+      "score": -3
+    },
+    {
+      "ID": 51,
+      "score": 1
+    },
+    {
+      "ID": 52,
+      "score": 1
+    }
   ]
 }

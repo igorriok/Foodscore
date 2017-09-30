@@ -1,15 +1,17 @@
 <resources>
     <string name="app_name">Food score</string>
-    <string name="VS">VS</string>
+    <string name="VS" translatable="false">VS</string>
     <string name="reset">Reset</string>
-    <string name="food_points">200</string>
-    <string name="food_id">201</string>
-    <string name="score_pref">scorePref</string>
-    <string name="p_pref">pPref</string>
-    <string name="n_pref">nPref</string>
+    <string name="food_points" translatable="false">200</string>
+    <string name="food_id" translatable="false">201</string>
+    <string name="score_pref" translatable="false">scorePref</string>
+    <string name="p_pref" translatable="false">pPref</string>
+    <string name="n_pref" translatable="false">nPref</string>
     <string name="dark_side">Dark side</string>
     <string name="light_side">Light side</string>
-    
+    <string name="showInst">showInst</string>
+    <string name="instPref">instPref</string>
+
     <string name="food1">Hamburger</string>
     <string name="food2">Cheeseburger</string>
     <string name="food3">Chips</string>
@@ -57,6 +59,34 @@
     <string name="food45">Juice</string>
     <string name="food46">Strong Alcoholic Drink</string>
     <string name="food47">Weak Alcoholic Drink</string>
+    <string name="food48">Jam</string>
+    <string name="food49">Sauce</string>
+    <string name="food50">Candy</string>
+    <string name="food51">Fresh juice</string>
+    <string name="food52">Pasta</string>
 
+
+    <string name="instructions">To check the score just find in the list the food you ate and click on it, rest will do the app.</string>
+    <string name="nt0">Yes, yes, I can feel your anger</string>
+    <string name="nt1">This is madness!</string>
+    <string name="nt2">Stop, don\'t do it!</string>
+    <string name="nt3">This will destroy you!</string>
+    <string name="nt4">You\'ve come too far!</string>
+    <string name="nt5">Can\'t help yourself, aren\'t you?</string>
+    <string name="nt6">This will have consequences</string>
+    <string name="nt7">I can\'t help you anymore</string>
+    <string name="nt8">No God, please no!</string>
+    <string name="nt9">My God, what have you done!</string>
+    <string name="pt0">You\'ve become more powerful</string>
+    <string name="pt1">This is the right choice</string>
+    <string name="pt2">Together we will win!</string>
+    <string name="pt3">Believe in you!</string>
+    <string name="pt4">You can do it!</string>
+    <string name="pt5">You are the one</string>
+    <string name="pt6">I feel greate force in you</string>
+    <string name="pt7">You are on right direction</string>
+    <string name="pt8">Don\'t stop!</string>
+    <string name="pt9">I admire you strength of will</string>
+    <string name="pt10">You have no barriers!</string>
 
 </resources>
