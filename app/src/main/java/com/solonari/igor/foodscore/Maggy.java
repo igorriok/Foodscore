@@ -141,7 +141,7 @@ public class Maggy extends AppCompatActivity {
 
                 TransitionSet move  = new TransitionSet()
                         .addTarget(newFood)
-                        .setDuration(2000)
+                        .setDuration(1000)
                         .addTransition(new ChangeBounds())
                         .addTransition(new ChangeTransform());
 

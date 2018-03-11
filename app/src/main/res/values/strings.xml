@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Food score</string>
+    <string name="app_name">Foodscore</string>
     <string name="VS" translatable="false">VS</string>
     <string name="reset">Reset</string>
     <string name="food_points" translatable="false">200</string>
@@ -9,8 +9,8 @@
     <string name="n_pref" translatable="false">nPref</string>
     <string name="dark_side">Dark side</string>
     <string name="light_side">Light side</string>
-    <string name="showInst">showInst</string>
-    <string name="instPref">instPref</string>
+    <string name="showInst" translatable="false">showInst</string>
+    <string name="instPref" translatable="false">instPref</string>
 
     <string name="food1">Hamburger</string>
     <string name="food2">Cheeseburger</string>
